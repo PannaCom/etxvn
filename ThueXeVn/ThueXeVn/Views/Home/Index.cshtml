@@ -1,0 +1,710 @@
+﻿@{
+    ViewBag.Title = "Dịch Vụ Cho Thuê Xe Giá Rẻ (UY TÍN NHẤT) tại Việt Nam | Thuexevn.com";
+    ViewBag.Description = "Tự hào là Công ty có Dịch vụ cho thuê xe ô tô uy tín chất lượng trong nhiều năm qua: Dịch vụ cho Thuê xe Hà Nội, Taxi đường dài giá rẻ, Taxi đi tỉnh";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    string link = "";
+}
+
+<div class="map_canvas" style="display:none;"></div>
+
+
+@*<label for="autocomplete">Select a programming language: </label>
+    <input id="autocomplete">
+    <script>
+        var tags = ["c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"];
+        $("#autocomplete").autocomplete({
+            source: function (request, response) {
+                var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "i");
+                response($.grep(tags, function (item) {
+                    return matcher.test(item);
+                }));
+            }
+        });
+    </script>*@
+
+@section Styles {
+    <link href="~/Content/stylemh.css" rel="stylesheet" />
+    <link href="~/Content/Theme/admin/vendor/datatable/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <style>
+        #form_search_taxe * {
+            border-radius: 0;
+        }
+    </style>
+}
+
+
+@section sliderHome {
+
+    <div id="divMainContent" style="height: auto;">
+        <div id="divContentBody" class="container-fluid" style="min-height: 304px; padding: 0;">
+            <div id="divBannerImages" class="home-banner" style="height: auto;">
+                <div class="container">
+                    <div class="row">
+                        @*<div class="col-sm-6 col-sm-push-6">
+                                <div id="form_timxe">
+                                    <input id="address" name="address" class="form-control col-sm-3" placeholder="Bạn đang ở đâu? Gõ địa chỉ muốn đón" autocomplete="on" />
+                                    <input type="hidden" id="lon" name="lon" value="" />
+                                    <input type="hidden" id="lat" name="lat" value="" />
+                                    <select id="car_type" class="form-control col-sm-3 bg-white" style="color: #fff;">
+                                        <option value="">Chọn loại xe</option>
+                                    </select>
+                                    <select id="car_size" class="form-control col-sm-3 bg-white" style="color: #fff;">
+                                        <option value="">Chọn số chỗ</option>
+                                    </select>
+                                    <input type="button" value="TÌM XE" class="form-control btn btn-primary btn-block" style="background-color:#449d44;color:#ffffff;" onclick="search();" id="search" />
+                                </div>
+                            </div>*@
+                        <div class="col-md-12">
+                            <div class="span5 about-carousel">
+                                <div id="divBannerTextCarousel" class="carousel slide">
+                                    <div id="divBannerTexts" class="carousel-inner custom_slider" style="margin-top: 19px; margin-bottom: 19px;">
+                                        <div class="item active">
+                                            <a class="highlight-1" target="_blank" href="#">Xe gia đình, xe của chúng mình</a>
+                                        </div>
+                                        <div class="item">
+                                            <a class="highlight-1" target="_blank" href="#">Đặt xe <strong>Nhanh chóng</strong> Đơn giản</a>
+                                        </div>
+                                        <div class="item">
+                                            <a class="highlight-1" target="_blank" href="#">Gọi xe <strong>QUANH ĐÂY</strong> với ứng dụng  <strong>THÔNG MINH</strong></a>
+                                        </div>
+                                        <div class="item">
+                                            <a class="highlight-1" target="_blank" href="#">Hãng xe đẹp <strong>MỚI</strong> và  <strong>LỊCH SỰ </strong></a>
+                                        </div>
+                                        <div class="item">
+                                            <a class="highlight-1" target="_blank" href="#">Cài ngay <strong>Ứng dụng Thuê Xe Vn</strong></a>
+                                        </div>
+                                        <div class="item">
+                                            <a class="highlight-1" target="_blank" href="#">Hoặc gọi <strong>0964108688</strong> để đặt xe</a>
+                                        </div>
+                                    </div>
+
+                                    <ul id="download" style="padding-left: 0; display: inline-flex; height: 200px;">
+                                        <li style="margin-bottom: 5px;">
+                                            <a href='https://play.google.com/store/apps/details?id=com.quickcar.thuexe'>
+                                                <img class="img-responsive img-c1" alt='Tải nội dung trên Google Play' src='/images/vi_badge_web_generic.png' />
+                                            </a>
+                                        </li>
+                                        <li style="margin-bottom: 5px;">
+                                            <a href="https://itunes.apple.com/us/app/thue-xe/id1166862903?ls=1&mt=8">
+                                                <img class="img-responsive img-c1" src="/Images/appstore.svg" />
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<section id="timtaixe_search" style="margin-top: -155px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" id="form_search_taxe">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <i class="fa fa-2x fa-car"></i> Tìm kiếm tài xế
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="place_from">Địa điểm đi</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="place_from" id="place_from" placeholder="Địa điểm từ">
+                                        <span class="input-group-addon" id="getmaplocation" style="padding: 14px 15px; cursor: pointer;"><i class="fa fa-map-marker"></i></span>
+                                        <input type="hidden" name="lat1" id="lat1" />
+                                        <input type="hidden" name="lng1" id="lng1" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="place_to">Địa điểm đến</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="place_to" id="place_to" placeholder="Địa điểm tới">
+                                        <span class="input-group-addon" id="movemaplocation" style="cursor: pointer;" onclick="swapValues();"><i class="fa fa-exchange"></i></span>
+                                        <input type="hidden" name="lat2" id="lat2" />
+                                        <input type="hidden" name="lng2" id="lng2" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Loaixe_socho" class="control-label">Loại xe</label>
+                                    <select class="form-control" name="Loaixe_socho" id="Loaixe_socho">
+                                        <option value="">Tất cả loại xe</option>
+                                        @*<option value="4">Xe 4 chỗ (giá siêu rẻ, có cốp)</option>
+                                        <option value="5">Xe 5 chỗ (có cốp)</option>
+                                        <option value="7">Xe 7 chỗ</option>
+                                        <option value="16">Xe 16 chỗ</option>
+                                        <option value="29">Xe 29 chỗ</option>*@
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel-footer" style="padding: 0;">
+                        <button class="btn btn-block btn-default color_button_stx" onclick="timkiemtaixe();" style="padding: 16px; border: 1px solid #ffcc33; font-size: 160%;"><i class="fa fa-search"></i> Bắt đầu tìm kiếm</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mh_show_customer_best">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <div class="kf_num_count_wrap">
+                    <i class="fa fa-car"></i>
+                    <a href="#"><h2 class="counter">156</h2> Số tài xế</a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="kf_num_count_wrap">
+                    <i class="fa fa-phone"></i>
+                    <a href="#"><h2 class="counter">1261</h2> Số cuộc gọi</a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="kf_num_count_wrap">
+                    <i class="fa fa-users"></i>
+                    <a href="#">
+                        <h2 class="counter">912</h2> Số khách hàng
+
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@*<div class="content-heading text-center">
+        <!-- Input Your Home Content Here -->
+        <div class="row text-center" style="min-height:667px;">
+            <!-- contact form outer row with centered text-->
+            <h2>THUÊ XE VIỆT NAM</h2>
+            <h2>
+                <a href='https://play.google.com/store/apps/details?id=com.quickcar.thuexe'>
+                    <img alt='Tải nội dung trên Google Play' src='/images/vi_badge_web_generic.png' style="width:270px;height:80px;" />
+                </a>
+            </h2>
+            <h2>
+                <a href="https://itunes.apple.com/us/app/thue-xe/id1166862903?ls=1&mt=8">
+                    <img src="/Images/appstore.svg" style="width:270px;height:80px;" />
+                </a>
+            </h2>
+            <div class="col-sm-12">
+
+            </div>
+
+        </div> <!-- end contact form outer row with centered text-->
+    </div><!-- End Input Your Home Content Here -->*@
+
+@*@{Html.RenderAction("LoadNewTop");}*@
+
+
+
+@*@{Html.RenderAction("LoadBooking");}*@
+
+@Html.Partial("_mh_show_carrental")
+
+@*@Html.Partial("_LoadBooking")*@
+
+<div id="comment-customers" class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 lead text-justify">
+                <div id="gioithieu" style="padding: 15px; color: #333; border-radius: 11px;">
+                    <p style="text-indent: 15px;">
+                        Tự hào là đơn vị cung cấp dịch vụ <strong>cho thuê xe</strong> uy tín chất lượng hàng đầu tại Việt Nam trong nhiều năm qua.
+                        Chúng tôi luôn cam kết với khách hàng dịch vụ thuê xe bảo đảm cả về 3 yếu tố: Chất lượng, giá cả và dịch vụ.
+                    </p>
+                    <p>
+                        <strong>Về chất lượng: </strong>Công ty cam kết chất lượng về xe và tài xế lái xe. Nhân viên lái xe được đào tạo và thực hành bài bản kỹ thuật lái xe cũng như thái độ nhã nhặn, chu đáo đối với khách hàng.
+                    </p>
+                    <p>
+                        <strong>Về giá cả: </strong>Bảo đảm giá cho thuê xe rẻ nhất, xe không mào, không dán logo.
+                    </p>
+                    <p>
+                        <strong>Về dịch vụ: </strong>Cam kết dịch vụ chu đáo, nhanh chóng, tận tình. Chúng tôi đáp ứng yêu cầu cho khách hàng ở mọi nơi với đa dạng tất cả các loại xe như: Cho thuê xe du lịch, taxi đường dài giá rẻ, cho thuê xe 4 chỗ, 7 chỗ, 9 chỗ, 16 chỗ, 29 chỗ,… sang trọng mới mẻ. Dịch vụ 24/7 kể cả ngày nghỉ, ngày lễ.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="owl-demo" class="owl-carousel owl-theme">
+                    <div class="item">
+                        <div class="col-md-8 col-md-push-2">
+                            <div class="avatar">
+                                <img src="/Images/comment_nguyenviethuy.png" alt="Anh Nguyễn Viết Huy">
+                            </div>
+                            <p class="avt-cmt">
+                                Anh Viết Huy
+                            </p>
+                            <p class="comment">
+                                Xe mới, chất lượng dịch vụ tốt!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="col-md-8 col-md-push-2">
+                            <div class="avatar">
+                                <img src="/Images/comment_chithuydung.png" alt="Chị Thùy Nhung">
+                            </div>
+                            <p class="avt-cmt">
+                                Chị Thùy Nhung
+                            </p>
+                            <p class="comment">
+                                Tài xế chu đáo, thân thiện!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="map-canvas" style="display: none;">
+    Bản đồ
+</div>
+
+
+@section Scripts {
+    @*<script>
+        if (location.protocol != 'https:') {
+            location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+        }
+    </script>*@
+    @*<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>*@
+    <script src="~/Scripts/waypoints.min.js"></script>
+    <script src="~/Scripts/jquery.counterup.min.js"></script>
+    <script type="text/javascript" src="~/Content/Theme/1a/js/owl.carousel.js"></script><!-- Owl Carousel Plugin -->
+    <script src="~/Content/Theme/admin/vendor/datatable/jquery.dataTables.min.js"></script>
+    <script src="~/Content/Theme/admin/vendor/datatable/dataTables.bootstrap.min.js"></script>
+    <script src="/Scripts/jquery.geocomplete.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLPSKQ4QV4xGiQjnZDUecx-UEr3D0QePY&libraries=places" type="text/javascript"></script>
+    
+    <script src="~/Scripts/script2.js"></script>
+    <script>
+        $(document).ready(function () {
+            "use strict";
+            $('#datetimepicker').datetimepicker({
+                dayOfWeekStart: 1,
+                lang: 'en',
+                disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
+                startDate: '@DateTime.Now.Year/@DateTime.Now.Month/@DateTime.Now.Date'
+            });
+            var d = new Date();
+            var s = d.toLocaleString();
+            $('#datetimepicker').datetimepicker({ value: s, step: 10 });
+
+            //load listcartype & listcarsize
+            $.ajax({
+                url: "/Api/getListCarType",
+                cache: false
+            }).done(function (html) {
+                var news = '{"news":' + html + '}';
+                var json_parsed = $.parseJSON(news);
+                for (var i = 0; i < json_parsed.news.length; i++) {
+                    if (json_parsed.news[i]) {
+                        var name = json_parsed.news[i].name;
+                        $("#car_type").append("<option value='" + name + "'>" + name + "</option>");
+                    }
+                }
+            });
+            $.ajax({
+                url: "/Api/getCarSize",
+                cache: false
+            }).done(function (html) {
+                var news = '{"news":' + html + '}';
+                var json_parsed = $.parseJSON(news);
+                for (var i = 0; i < json_parsed.news.length; i++) {
+                    if (json_parsed.news[i]) {
+                        var name = json_parsed.news[i].name;
+                        $("#car_size").append("<option value='" + name + "'>" + name + "</option>");
+                    }
+                }
+            });
+
+            //counter
+            if ($('.counter').length) {
+                $('.counter').counterUp({
+                    delay: 10,
+                    time: 1000
+                });
+            }
+
+            //show_news_slider
+            //if ($('#show_news_slider').length) {
+            //    var owl = $("#show_news_slider");
+            //    owl.owlCarousel({
+            //        autoPlay: 3000, //Set AutoPlay to 3 seconds
+            //        slideSpeed : 300,
+            //        paginationSpeed : 400,
+            //        singleItem:true,
+            //        navigation: true,
+            //        items: 1,
+            //        lazyLoad: true,
+            //        pagination: false,
+            //        navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+            //    });
+            //}
+
+            //ds dat xe
+            if ($('#booking').length) {
+                $('#booking').dataTable({
+                    "bFilter": false,
+                    scrollY: '50vh',
+                    scrollCollapse: true,
+                    paging: false,
+                    "bLengthChange": false,
+                    "bInfo": false,
+                    "bAutoWidth": true,
+                    "bSort": true,
+                });
+                $("#booking").on("click", ".bdx-x", function () {
+                    $(this).remove();
+
+                })
+
+                //var cycleTimer;
+                //function startCycle() {
+                //    cycleTimer = setInterval(function () {
+                //        $scroll.trigger('next');
+                //    }, 450);
+                //}
+
+                //// start to automatically cycle slides
+                //startCycle();
+
+                //// set next/previous buttons as clearInterval triggers
+                //var $stopTriggers = $('img.right').add('img.left'); // left right
+
+                //// function to stop auto-cycle
+                //function stopCycle() {
+                //    clearInterval(cycleTimer);
+                //    setTimeout(startCycle, 5000); // restart after 5 seconds
+                //}
+
+            }
+
+            //dangnhap taixe
+            if ($('.show_pn').length) {
+                $('.show_pn').on('click', function (e) {
+                    window.location.href = "/Home/Taixe";
+                    e.preventDefault();
+                })
+            }
+
+            //if ($('.bdx-x').length) {
+            //    $('.bdx-x').on('click', function () {
+            //        $(this).remove();
+            //    })
+            //}
+
+            //Loaixe_socho
+            $.ajax({
+                url: "/Home/getCarSize",
+                cache: false
+            }).done(function (html) {
+                $('#Loaixe_socho').append(html);
+            });
+
+        })
+
+        var length_booking = $('#booking > tbody > tr').length - 1;
+        var row_hidden = [];
+        var cycleTimer;
+        function startCycle() {
+            cycleTimer = setInterval(function () {
+                var row_random = getRandomInt(0, length_booking);
+                $('#booking > tbody > tr:eq(' + row_random + ')').fadeOut();
+                row_hidden.push(row_random);
+                //console.log(row_hidden.length);
+                if (row_hidden.length > 3) {
+                    clearInterval(cycleTimer);
+                    row_hidden.forEach(function (entry) {
+                        $('#booking > tbody > tr:eq(' + entry + ')').fadeIn();
+                    });
+                    row_hidden = [];
+                    setTimeout(startCycle, 3000); // restart after 5 seconds
+                }
+            }, 5000);
+        }
+        //// start to automatically cycle slides
+        startCycle();
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        $(function () {
+            var options = {
+                map: ".map-canvas"
+            };
+            $("#address").geocomplete(options)
+              .bind("geocode:result", function (event, result) {
+                  $("#lon").val(result.geometry.location.lng());
+                  $("#lat").val(result.geometry.location.lat());
+                  //alert("long" + result.geometry.location.lng() + ", lat=" + result.geometry.location.lat());
+              })
+              .bind("geocode:error", function (event, status) {
+                  $.log("ERROR: " + status);
+              })
+              .bind("geocode:multiple", function (event, results) {
+                  $.log("Multiple: " + results.length + " results found");
+              });
+        });
+
+
+        //function search() {
+        //    if (document.getElementById("lon").value == "") {
+        //        alert("Nhập địa chỉ muốn đón!");
+        //        document.getElementById("address").focus();
+        //        return;
+        //    }
+        //    window.location.href = "/Home/Search?lon=" + document.getElementById("lon").value + "&lat=" + document.getElementById("lat").value + "&address=" + document.getElementById("address").value + "&car_type=" + document.getElementById("car_type").value + "&car_size=" + document.getElementById("car_size").value;
+        //}
+
+
+
+    </script>
+    <script>
+            $(document).ready(function () {
+                $('.carousel').carousel({
+                    interval: 1000 * 2
+                });
+            })
+
+    </script>
+
+    <script>
+            $('#from_datetime').datetimepicker({
+                dayOfWeekStart: 1,
+                lang: 'en',
+                disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
+                startDate: '@DateTime.Now.Year/@DateTime.Now.Month/@DateTime.Now.Date'
+            });
+            $('#to_datetime').datetimepicker({
+                dayOfWeekStart: 1,
+                lang: 'en',
+                disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
+                startDate: '@DateTime.Now.Year/@DateTime.Now.Month/@DateTime.Now.Date'
+            });
+            var d = new Date();
+            var s = d.toLocaleString();
+            $('#from_datetime').datetimepicker({ value: s, step: 10 });
+            $('#to_datetime').datetimepicker({ value: s, step: 10 });
+            $(function () {
+                var options = {
+                    map: ".map_canvas"
+                };
+                $("#car_from").geocomplete(options)
+                  .bind("geocode:result", function (event, result) {
+                      $("#lon1").val(result.geometry.location.lng());
+                      $("#lat1").val(result.geometry.location.lat());
+                      //alert("long" + result.geometry.location.lng() + ", lat=" + result.geometry.location.lat());
+                  })
+                  .bind("geocode:error", function (event, status) {
+                      $.log("ERROR: " + status);
+                  })
+                  .bind("geocode:multiple", function (event, results) {
+                      $.log("Multiple: " + results.length + " results found");
+                  });
+                $("#car_to").geocomplete(options)
+                  .bind("geocode:result", function (event, result) {
+                      $("#lon2").val(result.geometry.location.lng());
+                      $("#lat2").val(result.geometry.location.lat());
+                      //alert("long" + result.geometry.location.lng() + ", lat=" + result.geometry.location.lat());
+                  })
+                  .bind("geocode:error", function (event, status) {
+                      $.log("ERROR: " + status);
+                  })
+                  .bind("geocode:multiple", function (event, results) {
+                      $.log("Multiple: " + results.length + " results found");
+                  });
+            });
+            function booking() {
+                var formdata = new FormData(); //FormData object
+                var from_datetime = document.getElementById("from_datetime").value;
+
+                if (document.getElementById("car_from").value == "" || document.getElementById("lon1").value == "") {
+                    alert("Nhập điểm đi!");
+                    document.getElementById("car_from").focus();
+                    return;
+                }
+
+                if (document.getElementById("car_to").value == "" || document.getElementById("lon2").value == "") {
+                    alert("Nhập điểm đến!");
+                    document.getElementById("car_to").focus();
+                    return;
+                }
+                if (document.getElementById("car_type2").value == "") {
+                    alert("Nhập loại xe!");
+                    document.getElementById("car_type2").focus();
+                    return;
+                }
+                if (document.getElementById("car_hire_type").value == "") {
+                    alert("Nhập hình thức đi!");
+                    document.getElementById("car_hire_type").focus();
+                    return;
+                }
+                if (document.getElementById("car_size2").value == "") {
+                    alert("Nhập số chỗ!");
+                    document.getElementById("car_size2").focus();
+                    return;
+                }
+                if (document.getElementById("from_datetime").value == "") {
+                    alert("Ngày giờ đi!");
+                    document.getElementById("from_datetime").focus();
+                    return;
+                }
+                if (document.getElementById("to_datetime").value == "") {
+                    alert("Ngày giờ về!");
+                    document.getElementById("to_datetime").focus();
+                    return;
+                }
+                if (document.getElementById("name").value == "") {
+                    alert("Nhập họ tên!");
+                    document.getElementById("name").focus();
+                    return;
+                }
+                if (document.getElementById("phone").value == "") {
+                    alert("Nhập số điện thoại!");
+                    document.getElementById("phone").focus();
+                    return;
+                }
+
+                formdata.append("car_from", document.getElementById("car_from").value);
+                formdata.append("car_to", document.getElementById("car_to").value);
+                formdata.append("car_type", document.getElementById("car_type2").value);
+                formdata.append("car_hire_type", document.getElementById("car_hire_type").value);
+                formdata.append("car_size", document.getElementById("car_size2").value);
+                formdata.append("from_datetime", document.getElementById("from_datetime").value);
+                formdata.append("to_datetime", document.getElementById("to_datetime").value);
+                formdata.append("lat1", document.getElementById("lat1").value);
+                formdata.append("lon1", document.getElementById("lon1").value);
+                formdata.append("lat2", document.getElementById("lat2").value);
+                formdata.append("lon2", document.getElementById("lon2").value);
+                formdata.append("name", document.getElementById("name").value);
+                formdata.append("phone", document.getElementById("phone").value);
+                document.getElementById("btnregister111").value = "Đang đặt xe xin chờ....";
+                document.getElementById("btnregister111").disabled = true;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/Api/booking');
+                xhr.send(formdata);
+                var content = "";
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        if (xhr.responseText == "1") {
+                            alert("Bạn đã đặt xe thành công! Tài xế sẽ liên hệ lại sớm nhất với bạn!");
+                        } else {
+                            alert("Chương trình đang cập nhật, xin quay lại sau!");
+                        }
+                        document.getElementById("btnregister111").value = "XÁC NHẬN";
+                        document.getElementById("btnregister111").disabled = false;
+                    }
+                }
+            }
+
+            $.ajax({
+                url: "/Api/getListCarType",
+                cache: false
+            }).done(function (html) {
+
+                var news = '{"news":' + html + '}';
+                var json_parsed = $.parseJSON(news);
+                $("#car_type2").html("");
+                for (var i = 0; i < json_parsed.news.length; i++) {
+                    if (json_parsed.news[i]) {
+                        var name = json_parsed.news[i].name;
+                        $("#car_type2").append("<option value='" + name + "'>" + name + "</option>");
+                    }
+                }
+            });
+
+            $.ajax({
+                url: "/Api/getCarHireType",
+                cache: false
+            }).done(function (html) {
+                var news = '{"news":' + html + '}';
+                var json_parsed = $.parseJSON(news);
+                $("#car_hire_type").html("");
+                for (var i = 0; i < json_parsed.news.length; i++) {
+                    if (json_parsed.news[i]) {
+                        var name = json_parsed.news[i].name;
+                        $("#car_hire_type").append("<option value='" + name + "'>" + name + "</option>");
+                    }
+                }
+            });
+
+            $.ajax({
+                url: "/Api/getCarSize",
+                cache: false
+            }).done(function (html) {
+                var news = '{"news":' + html + '}';
+                var json_parsed = $.parseJSON(news);
+                $("#car_size2").html("");
+                for (var i = 0; i < json_parsed.news.length; i++) {
+                    if (json_parsed.news[i]) {
+                        var name = json_parsed.news[i].name;
+                        $("#car_size2").append("<option value='" + name + "'>" + name + "</option>");
+                    }
+                }
+            });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            var owl = $("#owl-demo");
+
+            owl.owlCarousel({
+                autoPlay: 3000,
+                pagination: true,
+                items: 1, //10 items above 1000px browser width
+                itemsDesktop: [1000, 1], //5 items between 1000px and 901px
+                itemsDesktopSmall: [900, 1], // 3 items betweem 900px and 601px
+                itemsTablet: [600, 1], //2 items between 600 and 0;
+                itemsMobile: [480, 1] // itemsMobile disabled - inherit from itemsTablet option
+
+            });
+
+            // Custom Navigation Events
+            $(".next").click(function () {
+                owl.trigger('owl.next');
+            })
+            $(".prev").click(function () {
+                owl.trigger('owl.prev');
+            })
+            $(".play").click(function () {
+                owl.trigger('owl.play', 1000);
+            })
+            $(".stop").click(function () {
+                owl.trigger('owl.stop');
+            })
+
+
+        });
+    </script>
+
+}
+

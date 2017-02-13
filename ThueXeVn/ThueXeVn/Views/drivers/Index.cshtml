@@ -1,0 +1,385 @@
+﻿@model PagedList.IPagedList<ThueXeVn.Models.driver>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Danh sách tài xế";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    int count = 0;
+    int page = int.Parse(ViewBag.page.ToString());
+    count = (page - 1) * Config.PageSize;
+}
+
+@section Styles {
+    <style>
+        #modal-7 .modal-dialog {
+            z-index: 9999;
+        }
+    </style>    
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="page-header">
+            <h3>@ViewBag.Title</h3>
+        </div>
+    </div>
+</div>
+<a href="/drivers/Create" class="btn btn-primary">Thêm mới</a>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default box">
+            <div class="panel-heading">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <input type="text" id="keyword" class="form-control" placeholder="Từ khóa..." value="@ViewBag.k" />
+                    </div>
+                    <div class="form-group">
+                        <input type="button" value="Tìm Kiếm" class="btn btn-primary" onclick="search();" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <input type="button" value="Xóa" class="btn btn-primary" onclick="deleteSome();" id="btnregisterdel" />
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Stt</th>
+                        <th>Chọn</th>
+                        <th>
+                            Họ tên
+                        </th>
+                        <th>
+                            Điện thoại
+                        </th>
+                        <th>
+                            Tên xe
+                        </th>
+                        <th>
+                            Hãng xe
+                        </th>
+                        <th>
+                            Loại xe
+                        </th>
+                        <th>
+                            Trạng thái
+                        </th>
+                        @*<th>
+                                Năm sản xuất
+                            </th>
+                            <th>
+                                Loại xe
+                            </th>
+                            <th>
+                                Biển số
+                            </th>
+                            <th>
+                                Loại xe
+                            </th>
+                            <th>
+                                Giá
+                            </th>
+                            <th>
+                                Ngày đăng ký
+                            </th>
+                            <th>
+                                Mã kích hoạt
+                            </th>*@
+                      
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td>@count</td>
+                            <td><input type="checkbox" name="chk" id="@item.id"></td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.phone)
+                            </td>
+
+                            <td>
+                                <p>@Html.DisplayFor(modelItem => item.car_model)</p> 
+                                <p>@item.car_size chỗ</p>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.car_made)
+                            </td>
+                            <td>
+                                <p>@Html.DisplayFor(modelItem => item.car_type)</p>
+                                <p>Giá: @item.car_price đ/km</p>
+                            </td>
+                            <td>
+                                @if (item.code != "1")
+                                {
+                                    <span style="color:red;">Chưa kích hoạt</span>
+                                }
+                                else
+                                {
+                                    <span>Đang hoạt động</span>
+                                }
+                                <span>Đăng ký ngày @item.date_time, Mã code:@item.code</span>
+                            </td>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.car_years)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.car_size)
+                                </td>*@
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.car_number)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.car_type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.car_price)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.date_time)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.code)
+                                </td>*@
+                            <td>
+                                @Html.ActionLink("Sửa", "Edit", new { id = item.id }, htmlAttributes: new { @class = "btn btn-primary" })
+                                @*@Html.ActionLink("Details", "Details", new { id = item.id }) |*@
+                                @Html.ActionLink("Xóa", "Delete", new { id = item.id }, htmlAttributes: new { @class = "btn btn-danger" })
+                                <input type="button" value="Kích hoạt" class="btn btn-primary" onclick="Active(@item.id);" id="active_@item.id" />
+                                <hr />
+                                @if (@item.phone != null)
+                                {
+                                    {Html.RenderAction("LoadStatusListOnline", new { phone = @item.phone });}
+                                }
+                                
+                                <button type="button" class="btn btn-primary" id="kichhoat_@item.id" onclick="kichhoat(@item.id, '@item.phone');">Kích hoạt tài khoản</button>
+                                <button type="button" class="btn btn-danger" id="tamdung_@item.id" onclick="tamdung(@item.id, '@item.phone');">Tạm dừng tài khoản</button>
+                                <hr />
+                                @{Html.RenderAction("_checkInitmoney", new { id = @item.id });}
+                                <button class="btn btn-info" onclick="Init_acc_drShowForm(@item.id);" id="init_acc_driver_@item.id">Nộp tiền tài khoản</button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row">
+    @if (Model.PageCount > 1)
+    {
+        <div class="col-md-12">
+            <ul class="pagination clearfix">
+                <li class="disabled"><a href="#">«</a></li>
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    if (i != ViewBag.page)
+                    {
+                        <text>
+                            <li><a href="/drivers/Index?k=@ViewBag.k&page=@i">@i</a></li></text>
+                    }
+                    else
+                    {
+                        <text>
+                            <li><a href="/drivers/Index?k=@ViewBag.k&page=@i" style="background-color:#8a6d3b;">@i</a></li></text>
+                    }
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="modal-7" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="exampleModalLabel">Nộp tiền tài khoản</h4>
+            </div>
+
+            <div class="modal-body">
+
+                Content is loading...
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Đóng</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+<script>
+    function search() {
+        window.location.href = "/drivers/index?k=" + document.getElementById("keyword").value;
+    }
+    function deleteSome() {
+        if (confirm("Chắc chắn xóa những tài xế này?")){
+            var sThisVal = "(-1";
+            $('input[type=checkbox]').each(function () {
+                if (this.checked) sThisVal += "," + $(this).attr("id");
+            });
+            sThisVal += ")";
+            var formdata = new FormData();
+            formdata.append("id", sThisVal);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/Api/DelRegister');
+            xhr.send(formdata);
+            document.getElementById("btnregisterdel").value = "Đang cập nhật xin chờ...";
+            document.getElementById("btnregisterdel").disabled = true;
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    if (xhr.responseText == "1") {
+                        alert("Bạn đã xóa thành công!");
+                        window.location.href = "/drivers/index";
+                    } else {
+                        alert("Chương trình đang cập nhật, xin quay lại sau!");
+                    }
+                    document.getElementById("btnregisterdel").value = "Xóa";
+                    document.getElementById("btnregisterdel").disabled = false;
+                }
+            }
+        }
+        //alert(sThisVal);
+    }
+    function Active(id) {
+        if (confirm("Kích hoạt tài khoản tài xế này?")) {
+            
+            var formdata = new FormData();
+            formdata.append("id", id);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/Api/activeDriver');
+            xhr.send(formdata);
+            document.getElementById("active_" + id).value = "Đang cập nhật xin chờ...";
+            document.getElementById("active_" + id).disabled = true;
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    if (xhr.responseText == "1") {
+                        alert("Bạn đã kích hoạt thành công!");
+                        window.location.href = "/drivers/index";
+                    } else {
+                        alert("Chương trình đang cập nhật, xin quay lại sau!");
+                    }
+                    document.getElementById("active_" + id).value = "Kích hoạt";
+                    document.getElementById("active_" + id).disabled = false;
+                }
+            }
+        }
+        //alert(sThisVal);
+    }
+
+    function Init_acc_drShowForm(id) {
+        if (id) {
+            $.get('/drivers/getModalInitDriver?id=' + id, function(html){
+                $('#modal-7 .modal-body').html(html);
+                $('#modal-7').modal('show', {backdrop: 'static', keyboard: false});
+            });
+        }
+    }
+
+    function noptientodriver(id) {
+        var url = "/drivers/adddrivermoney"; // the script where you handle the form input.
+        if ($('#total_money').val() !== "") {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $("#form_init_acc_driver").serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if (data === 1) {
+                        alert('Đã nộp tiền tạo tài khoản cho tài xế.');
+                        var el1 = "#init_acc_driver_"+id;
+                        $(el1).siblings('.checked_money').html('Đã nộp: ' + $('#total_money').val() + " đồng.");
+                        //console.log($(this).html());
+                        
+                        //location.href = window.location;
+                    }
+                    //console.log(data);
+                }
+            });
+        }else {
+            alert("Vui lòng nhập số tiền tạo tài khoản nộp.");
+            $('#total_money').focus();
+        }   
+    }
+
+    function kichhoat(id, phone) {
+        var url = "/drivers/kichhoatdriver"; // the script where you handle the form input.
+        if (id) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {id: phone}, // serializes the form's elements.
+                success: function(data)
+                {
+                    if (data === '1') {
+                        alert('Đã kích hoạt tài khoản.');
+                        $('#kichhoat_'+id).siblings('.trangthai_taikhoan').html('Đã kích hoạt tài xế.');
+                    }
+                    //console.log(data);
+                }
+            });
+        }
+    }
+
+    function tamdung(id, phone) {
+        var url = "/drivers/tamdungdriver"; // the script where you handle the form input.
+        if (id) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {id: phone}, // serializes the form's elements.
+                success: function(data)
+                {
+                    if (data === '1') {
+                        alert('Đã tạm dừng tài khoản tài xế.');
+                        $('#tamdung_'+id).siblings('.trangthai_taikhoan').html('Đã tạm dừng tài khoản.');
+                    }
+                    //console.log(data);
+                }
+            });
+        }
+    }
+
+    //$(document).ready(function() {
+    //    $("#form_init_acc_driver").submit(function(e) {
+
+    //        var url = "/drivers/adddrivermoney"; // the script where you handle the form input.
+    //        if ($('#total_money').val() !== "") {
+            
+    //            $.ajax({
+    //                type: "POST",
+    //                url: url,
+    //                data: $("#form_init_acc_driver").serialize(), // serializes the form's elements.
+    //                success: function(data)
+    //                {
+    //                    if (data === 1) {
+    //                        alert('Đã nộp tiền tạo tài khoản cho tài xế.');
+    //                        console.log($(this).html());
+    //                    }
+    //                    console.log(data);
+    //                }
+    //            });
+    //        }else {
+    //            alert("Vui lòng nhập số tiền tạo tài khoản nộp.");
+    //        }
+    //        e.preventDefault(); // avoid to execute the actual submit of the form.
+    //    });
+    //})
+
+
+
+</script>
+
+}

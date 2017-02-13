@@ -1,0 +1,151 @@
+﻿@model PagedList.IPagedList<ThueXeVn.Models.find_bus>
+@using PagedList.Mvc;
+@{
+    
+    ViewBag.Title = "tổng hợp xe buyt Việt Nam";
+    ViewBag.des = "tổng hợp xe buyt Việt Nam";
+    ViewBag.keywords = "xe buyt, tuyến xe buýt,  tìm bus,  lộ trình xe bus";
+    
+    
+    if (ViewBag.sprovince != null && ViewBag.sprovince != "")
+    {
+        ViewBag.keywords += ", " + ViewBag.sprovince;
+        ViewBag.Title += ", " + ViewBag.sprovince;
+        ViewBag.des += ", " + ViewBag.sprovince;
+    }
+    if (ViewBag.sfrom != null && ViewBag.sfrom != "")
+    {
+        ViewBag.keywords += ", " + ViewBag.sfrom;
+        ViewBag.Title += ", " + ViewBag.sfrom;
+        ViewBag.des += ", " + ViewBag.sfrom;
+    }
+    if (ViewBag.sto != null && ViewBag.sto != "")
+    {
+        ViewBag.keywords += ", " + ViewBag.sto;
+        ViewBag.Title += ", " + ViewBag.sto;
+        ViewBag.des += ", " + ViewBag.sto;
+    }
+    if (ViewBag.page != null && ViewBag.page != 1)
+    {
+
+        ViewBag.Title += ", trang " + ViewBag.page;
+        ViewBag.des += ", trang " + ViewBag.page;
+    }
+    ViewBag.image = ThueXeVn.Config.domain + "/Images/Bus.png";
+    Layout = "~/Views/Shared/_LayoutContent.cshtml";
+}
+<h1>@ViewBag.Title</h1>
+<div class="row" style="background: #fff; color: #333;">
+    <div class="container-fluid22" style="min-height: 304px; padding: 0;">
+        <div style="height: auto;">
+            <div class="container">
+                <div class="row">
+                    <div id="form_timxe">
+                        @Html.Raw(ThueXeVn.Config.getTinhThanh())
+                        <input id="from" name="from" class="form-control col-sm-3" placeholder="Điểm đi" onkeyup="searchKeyword(1);" autocomplete="off" value="@ViewBag.sfrom"/>
+                        <input id="to" name="to" class="form-control col-sm-3" placeholder="Điểm đến" onkeyup="searchKeyword(2);" autocomplete="off" value="@ViewBag.sto" />
+                        <input type="button" value="TÌM XE BUÝT" class="form-control btn btn-primary btn-block" style="background-color:#449d44;color:#ffffff;" onclick="search();" id="search" />
+                    </div>
+                </div>
+                <div class="row">
+                    <a href="/XeBuyt/TimBus">Xem Theo Tuyến</a>
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <th>
+                                <b>Tỉnh thành</b><br />/
+                                Tuyến xe
+                            </th>
+                            <th>
+                                Tên Tuyến<br />Thời gian hoạt động<br />Tần suất hoạt động
+                            </th>
+                            <th>
+                                Lượt đi qua các phố chính
+                            </th>
+                            <th>
+                                Lượt về qua các phố chính
+                            </th>
+                            <th>
+                                Trợ giá?
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <b>@item.province </b><br />
+                                    số @Html.DisplayFor(modelItem => item.bus_no)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.bus_des)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.bus_from)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.bus_to)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.bus_type)
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<h4>Trên đây chúng tôi cung cấp cho quý khách hàng dịch vụ tìm xe buýt nhanh chóng nhất  trên toàn quốc gia, tuy nhiên nếu quý khách hàng không muốn đi ô tô vui lòng tham khảo và đăng ký dịch vụ: <a href="http://thuexevn.com"><b>cho thuê xe</b></a></h4>
+<div class="row">
+    @if (Model.PageCount > 1)
+    {
+        <div class="col-sm-9">
+            <ul class="pagination clearfix">
+                <li class="disabled"><a href="#">«</a></li>
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    if (i != ViewBag.page)
+                    {
+                        <text>
+                            <li><a href="/XeBuyt/List?sprovince=@ViewBag.sprovince&sfrom=@ViewBag.sfrom&sto=@ViewBag.sto&page=@i">@i</a></li></text>
+                    }
+                    else
+                    {
+                        <text>
+                            <li><a href="/XeBuyt/List?sprovince=@ViewBag.sprovince&sfrom=@ViewBag.sfrom&sto=@ViewBag.sto&page=@i" style="background-color:#8a6d3b;">@i</a></li></text>
+                    }
+                }
+            </ul>
+        </div>
+    }
+</div>
+<script>
+    function searchKeyword(type) {
+        if (type==1){
+            $('#from').autocomplete({
+                source: '/XeBuyt/Find?keyword=' + $("#from").val(),
+                select: function (event, ui) {
+                    $(event.target).val(ui.item.value);
+                    return false;
+                },
+                minLength: 1
+            });
+        } else {
+            $('#to').autocomplete({
+                source: '/XeBuyt/Find?keyword=' + $("#to").val(),
+                select: function (event, ui) {
+                    $(event.target).val(ui.item.value);
+                    return false;
+                },
+                minLength: 1
+            });
+        }
+    }
+    function search() {
+        window.location.href = "/XeBuyt/List?sprovince=" + $("#province").val() + "&sfrom=" + $("#from").val() + "&sto=" + $("#to").val();
+    }
+    $("#province").val("@Html.Raw(ViewBag.sprovince)");
+</script>

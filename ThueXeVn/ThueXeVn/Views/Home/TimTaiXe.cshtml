@@ -1,0 +1,511 @@
+﻿@model PagedList.IPagedList<ThueXeVn.Models.timkiemDrivers>
+@using PagedList.Mvc;
+
+@{
+    string url = Request.Url.Authority + HttpContext.Current.Request.RawUrl.ToString();
+    if (Request.ServerVariables["HTTPS"] == "on")
+    {
+        url = "https://" + url;
+    }
+    else
+    {
+        url = "http://" + url;
+    }
+}
+
+<link href="~/Content/bxslider/jquery.bxslider.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="/Content/jquery.datetimepicker.css" />
+<script src="/Scripts/jquery.datetimepicker.js"></script>
+
+@{
+    Layout = "~/Views/Shared/_LayoutContent.cshtml";
+    ViewBag.title = "Giá cho thuê xe";
+    ViewBag.des = "Giá cho thuê xe";
+    ViewBag.keywords = "";
+    ViewBag.url = @url;
+}
+
+@{
+    string title = "";
+    if (ViewBag.from != null)
+    {
+        title += " từ " + Html.Raw(ViewBag.from);
+    }
+
+    if (ViewBag.to != null)
+    {
+        title += " đến " + Html.Raw(ViewBag.to);
+    }
+
+    if (ViewBag.loaixe != null)
+    {
+        title += " loại xe " + Html.Raw(ViewBag.loaixe) + " chỗ";
+    }
+
+    if (ViewBag.kc_timkiem_view != null)
+    {
+        title += " khoảng cách khoảng " + Html.Raw(ViewBag.kc_timkiem_view) + " km giá một chiều (giá chưa bao gồm phí cầu đường).";
+    }
+
+    ViewBag.title += title;
+    ViewBag.des += title;
+}
+
+@{
+    double kc_timkiem = 1;
+    if (ViewBag.kc_timkiem != null)
+    {
+        kc_timkiem = Convert.ToDouble(ViewBag.kc_timkiem);
+    }
+}
+
+@*<link href="~/Content/slick/slick.css" rel="stylesheet" />*@
+<link href="~/Content/style1.css" rel="stylesheet" />
+<input id="kc_duongdi" type="hidden" value="@ViewBag.kc_timkiem_view" />
+<div id="timtaixe">
+    <div class="row">
+        @*col-sm-push-4*@
+
+        <div class="col-sm-4" id="form_search_taxe">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Tìm kiếm tài xế
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label class="control-label" for="place_from">Địa điểm đi</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="place_from" id="place_from" placeholder="Địa điểm từ">
+                                    <span class="input-group-addon" id="getmaplocation" style="padding: 14px 15px; cursor: pointer;"><i class="fa fa-map-marker"></i></span>
+                                    <input type="hidden" name="lat1" id="lat1" />
+                                    <input type="hidden" name="lng1" id="lng1" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label class="control-label" for="place_to">Địa điểm đến</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="place_to" id="place_to" placeholder="Địa điểm tới">
+                                    <span class="input-group-addon" id="movemaplocation" style="cursor: pointer;" onclick="swapValues();"><i class="fa fa-exchange"></i></span>
+                                    <input type="hidden" name="lat2" id="lat2" />
+                                    <input type="hidden" name="lng2" id="lng2" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label for="Loaixe_socho" class="control-label">Loại xe</label>
+                                <select class="form-control" name="Loaixe_socho" id="Loaixe_socho">
+                                    <option value="">Tất cả loại xe</option>
+                                    @*<option value="4">Xe 4 chỗ (giá siêu rẻ, không cốp)</option>
+                                        <option value="5">Xe 5 chỗ (có cốp)</option>
+                                        <option value="7">Xe 7 chỗ</option>
+                                        <option value="8">Xe 8 chỗ</option>
+                                        <option value="16">Xe 16 chỗ</option>
+                                        <option value="29">Xe 29 chỗ</option>
+                                        <option value="30">Xe 30 chỗ</option>*@
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-block btn-default color_button_stx" onclick="timkiemtaixe();"><i class="fa fa-search"></i> Cập nhật tìm kiếm</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-8" id="result_taixe">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    @*<h3>Dịp tết chỉ hiện thị các tài xế có giá từ 8,000 đồng/km trở lên</h3>*@
+                    <h3 class="panel-title">
+                        Kết quả @title
+                        <select name="gia_select" id="gia_select" class="pull-right">
+                            <option value="1">Giá tăng dần</option>
+                            <option value="2">Giá giảm dần</option>
+                        </select>
+                    </h3>
+                    @if (ViewBag.sotaixe != null)
+                    {
+                        <text><p style="color: #fff;padding-top: 10px;">Có @ViewBag.sotaixe tài xế đang chờ bạn.</p></text>
+                    }
+
+                </div>
+                <div class="panel-body list-group">
+                    @if (Model != null)
+                    {
+                        if (Model.Count > 0)
+                        {
+                            foreach (var item in Model)
+                            {
+                                double giaTaiXe = 1;
+                                if (item.cp_price != null)
+                                {
+                                    double d_gia = Convert.ToDouble(item.cp_price);
+                                    giaTaiXe *= kc_timkiem * d_gia;
+                                }
+
+                                <div class="row results_card mco_out">
+                                    <div class="col-xs-6 col-md-8">
+                                        <section class="col-xs-12 col-md-3">
+                                            <p id="car_type_made_model_@item.id">@item.car_made @item.car_model @item.car_years</p>
+                                            @{Html.RenderAction("LoadCarImage", new { made = @item.car_made, model = @item.car_model });}
+                                        </section>
+
+                                        <section class="col-xs-12 col-md-9 pho_information" style="padding-top: 0;">
+                                            <h4>@item.name</h4>
+                                            <div class="rating-star-box" title="This provider has received 4.5 stars out of 5 based on customer reviews">
+                                                @if (item.DiffDate <= 7)
+                                                {
+                                                    <i class="fa fa-star color_stx"></i>
+                                                    <i class="fa fa-star color_stx"></i>
+                                                    <i class="fa fa-star color_stx"></i>
+                                                    <i class="fa fa-star color_stx"></i>
+                                                    <i class="fa fa-star color_stx"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-star color_stx"></i>
+                                                    <i class="fa fa-star color_stx"></i>
+                                                    <i class="fa fa-star color_stx"></i>
+                                                    <i class="fa fa-star color_stx"></i>
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            </div>
+                                            @if (item.address != null && item.address != "")
+                                            {
+                                                <text><p class="pho-location"><i class="fa fa-map-marker"></i>&nbsp;@item.address</p></text>
+                                            }
+                                            
+                                           @{Html.RenderAction("LoadPromotionDriver", new { id = @item.id });}
+                                           
+                                        </section>
+                                        
+                                    </div>
+
+
+
+                                    <div class="col-xs-6 col-md-4">
+                                        <section class="col-xs-12 col-md-12 price_container">
+                                            <div>
+                                                <p>
+                                                    Tổng giá:
+                                                    @if (giaTaiXe != 1)
+                                                    {
+                                                        <text><span id="total_money_driver_@item.id">@string.Format("{0:#,###}", giaTaiXe)</span> Đồng.</text>
+                                                    }
+                                                </p>
+                                                <p>Giá 1km: <span id="price_driver_@item.id">@string.Format("{0:#,###}", item.cp_price)</span> Đồng.</p>
+                                            </div>
+                                            <p>
+                                                <a href="tel:0964108688" class="btn btn-default color_button_stx btn-block"><i class="fa fa-phone"></i> Gọi ngay</a>
+                                            </p>
+                                            <p>
+                                                <span style="color: #fff;" class="btn btn-primary dat_xe btn-block" id="dat_xe_nhanh_@item.id" onclick="func_datxenhanh(@item.id);"><i class="fa fa-car"></i> Đặt xe</span>
+                                            </p>
+                                        </section>
+                                       
+                                    </div>
+                                   
+                                    @{Html.RenderAction("LoadImageDriver", new { id = @item.id });}
+                                    
+
+                                </div>
+                        
+                        
+
+
+                            }
+
+                            @Html.PagedListPager(Model, page => Url.Action("TimTaiXe", "Home", new { pg = page, lat1 = ViewBag.lat1, lng1 = ViewBag.lng1, lat2 = ViewBag.lat2, lng2 = ViewBag.lng2, from = ViewBag.from, to = ViewBag.to, loaixe = ViewBag.loaixe, kc = ViewBag.kc_timkiem, gia_select = ViewBag.gia_select }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
+
+                        }
+                        else
+                        {
+                            <div class="row results_card mco_out">
+                                Không có tài xế nào.
+                            </div>
+                        }
+
+                    }
+                    else
+                    {
+                        <div class="row results_card mco_out">
+                            Không có tài xế nào.
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+
+        </div>
+
+        @*col-sm-pull-8*@
+
+
+
+    </div>
+</div>
+
+<div id="map-canvas" style="display: none;">
+    Bản đồ
+</div>
+
+<div class="modal fade" id="modal-7" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="exampleModalLabel" style="color: #333; font-weight: 600;">Đặt xe</h4>
+            </div>
+
+            <div class="modal-body">
+
+                Content is loading...
+                <div class="form-group">
+
+                </div>
+
+            </div>
+
+            @*<div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Đóng</button>
+
+            </div>*@
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.from != null || ViewBag.to != null || ViewBag.loaixe != null)
+{
+    <script>
+        $(document).ready(function () {
+            $('#place_from').val('@Html.Raw(ViewBag.from)');
+            $('#place_to').val('@Html.Raw(ViewBag.to)');
+            $('#Loaixe_socho').val('@Html.Raw(ViewBag.loaixe)');
+        })
+    </script>
+}
+
+@if (ViewBag.lat1 != null)
+{
+    <script>
+        $(document).ready(function () {
+            $('#lat1').val('@Html.Raw(ViewBag.lat1)');
+        })
+    </script>
+}
+
+@if (ViewBag.lng1 != null)
+{
+    <script>
+        $(document).ready(function () {
+            $('#lng1').val('@Html.Raw(ViewBag.lng1)');
+        })
+    </script>
+}
+
+@if (ViewBag.lat2 != null)
+{
+    <script>
+        $(document).ready(function () {
+            $('#lat2').val('@Html.Raw(ViewBag.lat2)');
+        })
+    </script>
+}
+
+@if (ViewBag.lng2 != null)
+{
+    <script>
+        $(document).ready(function () {
+            $('#lng2').val('@Html.Raw(ViewBag.lng2)');
+        })
+    </script>
+}
+
+@if (ViewBag.gia_select != null)
+{
+    <script>
+        $(document).ready(function () {
+            $('#gia_select').val('@Html.Raw(ViewBag.gia_select)');
+        })
+    </script>
+}
+
+@section scripts {
+    @*<script>
+            if (location.protocol != 'https:') {
+                location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+            }
+        </script>*@
+@*<script src="~/Content/slick/slick.min.js"></script>*@
+    <script src="~/Content/bxslider/jquery.bxslider.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLPSKQ4QV4xGiQjnZDUecx-UEr3D0QePY&libraries=places" type="text/javascript"></script>
+    <script src="/Scripts/jquery.geocomplete.js"></script>
+    <script src="~/Scripts/script2.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#gia_select').on('change', function () {
+                if ($(this).val() !== "") {
+                    var url_2 = document.location.pathname + addUrlParam(document.location.search, 'gia_select', $(this).val());
+                    window.location.href = url_2;
+                }
+            })
+
+            //Loaixe_socho
+            $.ajax({
+                url: "/Home/getCarSize",
+                cache: false
+            }).done(function (html) {
+                $('#Loaixe_socho').append(html);
+            });
+
+            setTimeout(function () {
+                @if (ViewBag.loaixe != null)
+            {
+                <text>$('#Loaixe_socho').val('@Html.Raw(ViewBag.loaixe)');</text>
+            }
+            }, 1000)
+
+        })
+
+        var addUrlParam = function (search, key, val) {
+            var newParam = key + '=' + val,
+                params = '?' + newParam;
+
+            // If the "search" string exists, then build params from it
+            if (search) {
+                // Try to replace an existance instance
+                params = search.replace(new RegExp('([?&])' + key + '[^&]*'), '$1' + newParam);
+
+                // If nothing was replaced, then add the new param to the end
+                if (params === search) {
+                    params += '&' + newParam;
+                }
+            }
+            return params;
+        };
+
+    </script>
+
+    @*//dat xe nhanh*@
+    <script>
+        function func_datxenhanh(id) {
+            
+            if (document.getElementById('lat1').value === "" && document.getElementById('lng1').value === "") {
+                alert('Vui lòng nhập điểm đi.');
+                return false;
+                
+            }
+            if (document.getElementById('lat2').value === "" && document.getElementById('lng2').value === "") {
+                alert('Vui lòng nhập điểm đến.');
+                return false;
+                
+            }
+            if (id) {
+                $.get('/Home/getModaldatxenhanh?driver_id=' + id + "&diemdi=" + document.getElementById('place_from').value + "&diemden=" + document.getElementById('place_to').value + "&kcc=" + document.getElementById('kc_duongdi').value, function (html) {
+                    $('#modal-7 .modal-body').html(html);
+                    $('#modal-7').modal('show', { backdrop: 'static', keyboard: false });
+                })
+            }
+            
+        }
+
+        function saveBookingToDriver(id) {
+            document.getElementById('lon_from').value = document.getElementById('lng1').value;
+            document.getElementById('lat_from').value = document.getElementById('lat1').value;
+            document.getElementById('lon_to').value = document.getElementById('lng2').value;
+            document.getElementById('lat_to').value = document.getElementById('lat2').value;
+            document.getElementById('from_place').value = document.getElementById('place_from').value;
+            document.getElementById('to_place').value = document.getElementById('place_to').value;
+            document.getElementById('car_type_made_model').value = $('#car_type_made_model_' + id).html();
+            document.getElementById('price_driver').value = $('#price_driver_' + id).html().replace(',','');
+            document.getElementById('total_money').value = $('#total_money_driver_' + id).html().replace(',', '');
+            document.getElementById('distance').value = document.getElementById('kc_duongdi').value;
+            
+            var url = "/Home/saveBookingToDriver"; // the script where you handle the form input.
+            if (document.getElementById('customer_name').value === "") {
+                alert("Vui lòng nhập họ tên khách hàng.");
+                document.getElementById('customer_name').focus();
+                return false;
+            }
+            if (document.getElementById('customer_phone').value === "") {
+                alert("Vui lòng nhập số điện thoại khách hàng.");
+                document.getElementById('customer_phone').focus();
+                return false;
+            }
+            if (document.getElementById('from_date').value === "") {
+                alert("Vui lòng nhập ngày đến.");
+                document.getElementById('from_date').focus();
+                return false;
+            }
+            if (document.getElementById('to_date').value === "") {
+                alert("Vui lòng nhập ngày đi.");
+                document.getElementById('to_date').focus();
+                return false;
+            }
+            if (document.getElementById('from_date').value > document.getElementById('to_date').value) {
+                alert("Ngày đi phải sau ngày đến");
+                document.getElementById('from_date').focus();
+                return false;
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $("#form_dat_thue_xe").serialize(), // serializes the form's elements.
+                success: function (data) {
+                    if (data == 1) {
+                        $('#modal-7').modal('hide');
+                       
+                        //reset value
+                        document.getElementById('customer_name').value = "";
+                        document.getElementById('customer_phone').value = "";
+                        document.getElementById('from_date').value = "";
+                        var d = new Date();
+                        var s = d.toLocaleString();
+                        $('#to_date').datetimepicker({ value: s, step: 10 });
+                        //end value
+                        setTimeout(function () { alert('Đã đặt xe thành công.'); }, 1000);
+                        $('#dat_xe_nhanh_' + id).html('Đặt xe thành công');
+                    }
+                    //console.log(data);
+                }
+            });
+        }
+
+        //$(document).ready(function(){
+        //    $('.multiple-items').slick({
+        //        infinite: true,
+        //        slidesToShow: 1,
+        //        slidesToScroll: 1
+        //    });
+        //});
+
+        $(document).ready(function () {
+            $('.bxslider').bxSlider({
+                infiniteLoop: false,
+                slideMargin: 10,
+                minSlides: 1,
+                slideWidth: 250,
+                controls: false
+            });
+        });
+
+        
+
+    </script>
+
+}
