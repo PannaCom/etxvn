@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Dịch Vụ Cho Thuê Xe Giá Rẻ (UY TÍN NHẤT) tại Việt Nam | Thuexevn.com";
-    ViewBag.Description = "Tự hào là Công ty có Dịch vụ cho thuê xe ô tô uy tín chất lượng trong nhiều năm qua: Dịch vụ cho Thuê xe Hà Nội, Taxi đường dài giá rẻ, Taxi đi tỉnh";
+    //ViewBag.Title = "Dịch Vụ Cho Thuê Xe Giá Rẻ (UY TÍN NHẤT) tại Việt Nam | Thuexevn.com";
+    //ViewBag.Description = "Tự hào là Công ty có Dịch vụ cho thuê xe ô tô uy tín chất lượng trong nhiều năm qua: Dịch vụ cho Thuê xe Hà Nội, Taxi đường dài giá rẻ, Taxi đi tỉnh";
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
     string link = "";
 }
@@ -59,37 +59,26 @@
                                 <div id="divBannerTextCarousel" class="carousel slide">
                                     <div id="divBannerTexts" class="carousel-inner custom_slider" style="margin-top: 19px; margin-bottom: 19px;">
                                         <div class="item active">
-                                            <a class="highlight-1" target="_blank" href="#">Xe gia đình, xe của chúng mình</a>
+                                            <a class="highlight-1" target="_blank" href="#">Rental Car in viet nam</a>
                                         </div>
                                         <div class="item">
-                                            <a class="highlight-1" target="_blank" href="#">Đặt xe <strong>Nhanh chóng</strong> Đơn giản</a>
+                                            <a class="highlight-1" target="_blank" href="#">For <strong>Travel and Business</strong></a>
                                         </div>
                                         <div class="item">
-                                            <a class="highlight-1" target="_blank" href="#">Gọi xe <strong>QUANH ĐÂY</strong> với ứng dụng  <strong>THÔNG MINH</strong></a>
+                                            <a class="highlight-1" target="_blank" href="#">Call <strong>(+84)093 9126 888</strong></a>
                                         </div>
                                         <div class="item">
-                                            <a class="highlight-1" target="_blank" href="#">Hãng xe đẹp <strong>MỚI</strong> và  <strong>LỊCH SỰ </strong></a>
+                                            <a class="highlight-1" target="_blank" href="#">Car <strong>New</strong> and  <strong>good service </strong></a>
                                         </div>
                                         <div class="item">
-                                            <a class="highlight-1" target="_blank" href="#">Cài ngay <strong>Ứng dụng Thuê Xe Vn</strong></a>
+                                            <a class="highlight-1" target="_blank" href="#">taxi airport <strong>airport</strong></a>
                                         </div>
                                         <div class="item">
-                                            <a class="highlight-1" target="_blank" href="#">Hoặc gọi <strong>0964108688</strong> để đặt xe</a>
+                                            <a class="highlight-1" target="_blank" href="#">service for business,  <strong>for city tour</strong> </a>
                                         </div>
                                     </div>
 
-                                    <ul id="download" style="padding-left: 0; display: inline-flex; height: 200px;">
-                                        <li style="margin-bottom: 5px;">
-                                            <a href='https://play.google.com/store/apps/details?id=com.quickcar.thuexe'>
-                                                <img class="img-responsive img-c1" alt='Tải nội dung trên Google Play' src='/images/vi_badge_web_generic.png' />
-                                            </a>
-                                        </li>
-                                        <li style="margin-bottom: 5px;">
-                                            <a href="https://itunes.apple.com/us/app/thue-xe/id1166862903?ls=1&mt=8">
-                                                <img class="img-responsive img-c1" src="/Images/appstore.svg" />
-                                            </a>
-                                        </li>
-                                    </ul>
+                                  
 
                                 </div>
                             </div>
@@ -102,67 +91,6 @@
 
 }
 
-<section id="timtaixe_search" style="margin-top: -155px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12" id="form_search_taxe">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            <i class="fa fa-2x fa-car"></i> Tìm kiếm tài xế
-                        </h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-horizontal">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="control-label" for="place_from">Địa điểm đi</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="place_from" id="place_from" placeholder="Địa điểm từ">
-                                        <span class="input-group-addon" id="getmaplocation" style="padding: 14px 15px; cursor: pointer;"><i class="fa fa-map-marker"></i></span>
-                                        <input type="hidden" name="lat1" id="lat1" />
-                                        <input type="hidden" name="lng1" id="lng1" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="control-label" for="place_to">Địa điểm đến</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="place_to" id="place_to" placeholder="Địa điểm tới">
-                                        <span class="input-group-addon" id="movemaplocation" style="cursor: pointer;" onclick="swapValues();"><i class="fa fa-exchange"></i></span>
-                                        <input type="hidden" name="lat2" id="lat2" />
-                                        <input type="hidden" name="lng2" id="lng2" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="Loaixe_socho" class="control-label">Loại xe</label>
-                                    <select class="form-control" name="Loaixe_socho" id="Loaixe_socho">
-                                        <option value="">Tất cả loại xe</option>
-                                        @*<option value="4">Xe 4 chỗ (giá siêu rẻ, có cốp)</option>
-                                        <option value="5">Xe 5 chỗ (có cốp)</option>
-                                        <option value="7">Xe 7 chỗ</option>
-                                        <option value="16">Xe 16 chỗ</option>
-                                        <option value="29">Xe 29 chỗ</option>*@
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="panel-footer" style="padding: 0;">
-                        <button class="btn btn-block btn-default color_button_stx" onclick="timkiemtaixe();" style="padding: 16px; border: 1px solid #ffcc33; font-size: 160%;"><i class="fa fa-search"></i> Bắt đầu tìm kiếm</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
 
 <section class="mh_show_customer_best">
     <div class="container">
@@ -170,20 +98,20 @@
             <div class="col-md-4 col-sm-6">
                 <div class="kf_num_count_wrap">
                     <i class="fa fa-car"></i>
-                    <a href="#"><h2 class="counter">156</h2> Số tài xế</a>
+                    <a href="#"><h2 class="counter">156</h2> Drivers</a>
                 </div>
             </div>
             <div class="col-md-4 col-sm-6">
                 <div class="kf_num_count_wrap">
                     <i class="fa fa-phone"></i>
-                    <a href="#"><h2 class="counter">1261</h2> Số cuộc gọi</a>
+                    <a href="#"><h2 class="counter">1261</h2> Calls</a>
                 </div>
             </div>
             <div class="col-md-4 col-sm-6">
                 <div class="kf_num_count_wrap">
                     <i class="fa fa-users"></i>
                     <a href="#">
-                        <h2 class="counter">912</h2> Số khách hàng
+                        <h2 class="counter">112</h2> Customers
 
                     </a>
                 </div>
@@ -488,7 +416,7 @@
     <script>
             $(document).ready(function () {
                 $('.carousel').carousel({
-                    interval: 1000 * 2
+                    interval: 2000 * 2
                 });
             })
 

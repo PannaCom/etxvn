@@ -70,7 +70,7 @@ namespace ThueXeVn
 
             routes.MapRoute(
                 "datxetructuyen",
-                "dat-xe",
+                "car-rental",
                 new { controller = "Home", action = "CarRental" }
             );
 
