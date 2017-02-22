@@ -2053,6 +2053,9 @@ ul.img-product-n > li > a > img {
 }
 
 @media (max-width: 767px) {
+    ..highlight-1 {
+        font-size: 2.55em;
+    }
 
     #search_option > div > div {
         margin-bottom: 5px;
