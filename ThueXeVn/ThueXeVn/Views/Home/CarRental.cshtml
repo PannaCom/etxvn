@@ -185,7 +185,7 @@
         formdata.append("name", document.getElementById("name").value);
         formdata.append("phone", document.getElementById("phone").value);
         formdata.append("utm", utm_source);
-        document.getElementById("btnregister111").value = "Đang đặt xe xin chờ....";
+        document.getElementById("btnregister111").value = "Loading....";
         document.getElementById("btnregister111").disabled = true;
 
         var xhr = new XMLHttpRequest();
@@ -195,12 +195,11 @@
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 if (xhr.responseText == "1") {
-                    alert("Bạn đã đặt xe thành công! Tài xế sẽ liên hệ lại sớm nhất với bạn!");
-                    window.location.href = window.location.href;
+                    alert("Thanks for your booking! We will contact you soon!");
                 } else {
-                    alert("Chương trình đang cập nhật, xin quay lại sau!");
+                    alert("Error Server! Call 093 912 6888");
                 }
-                document.getElementById("btnregister111").value = "XÁC NHẬN";
+                document.getElementById("btnregister111").value = "CONFIRM";
                 document.getElementById("btnregister111").disabled = false;
             }
         }
