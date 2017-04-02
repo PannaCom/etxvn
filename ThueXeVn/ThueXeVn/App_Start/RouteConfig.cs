@@ -26,8 +26,14 @@ namespace ThueXeVn
 
             routes.MapRoute(
                 "ViewXetaxinoibai",
-                "taxi-noi-bai-gia-re-taxi-san-bay-gia-re",
+                "taxi-noi-bai-best-price-taxi-airport-good-service",
                 new { controller = "Home", action = "XeTaxiNoiBai" }
+            );
+
+            routes.MapRoute(
+                "pricing car",
+                "pricing-rental-car",
+                new { controller = "Home", action = "banggiaxe" }
             );
 
             routes.MapRoute(
